@@ -7,6 +7,6 @@ public class CSVUtilities {
     ArrayList<String> CVSData = new ArrayList<>();
     int numColumns;
     public CSVUtilities(File csv){
-        
+
     }
 }
