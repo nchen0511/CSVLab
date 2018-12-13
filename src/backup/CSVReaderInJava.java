@@ -1,3 +1,5 @@
+package backup;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +19,7 @@ import java.util.List;
 public class CSVReaderInJava {
 
     public static void main(String... args) {
-        List<App> Apps = readSchoolsFromCSV("src/driver.csv");
+        List<App> Apps = readDriversFromCSV("src/driver.csv");
 
         // let's print all the person read from CSV file
         for (App b : Apps) {
@@ -25,7 +27,7 @@ public class CSVReaderInJava {
         }
     }
 
-    private static List<App> readSchoolsFromCSV(String fileName) {
+    private static List<App> readDriversFromCSV(String fileName) {
         List<App> Apps = new ArrayList<>();
         Path pathToFile = Paths.get(fileName);
 
@@ -48,7 +50,7 @@ public class CSVReaderInJava {
 
                 App App = createSchool(attributes);
 
-                // adding App into ArrayList
+                // adding backup.App into ArrayList
                 Apps.add(App);
 
                 // read next line before looping
@@ -67,25 +69,28 @@ public class CSVReaderInJava {
         String status = metadata[3];
         String dd = metadata[7];
         String de = metadata[8];
-        // create and return App of this metadata
-        return new App(status, dd,de);
+        String mc = metadata[9];
+        // create and return backup.App of this metadata
+        return new App(status, dd, de, mc);
     }
 
 }
 
 class App {
     private String status;
-    private boolean dd = false;
-    private boolean de = false;
+    private int missing = 0;
 
-    public App(String status, String dd, String de) {
+    public App(String status, String dd, String de, String mc) {
         this.status = status;
 
-        if(dd.equals("complete")){
-            this.dd = true;
+        if(dd.equalsIgnoreCase("Needed")){
+            missing++;
         }
-        if(de.equals("complete")){
-            this.de = true;
+        if(de.equalsIgnoreCase("Needed")){
+            missing++;
+        }
+        if(mc.equalsIgnoreCase("Needed")){
+            missing++;
         }
     }
 
@@ -93,17 +98,13 @@ class App {
         return status;
     }
 
-    public boolean getDD(){
-        return dd;
-    }
-
-    public boolean getDE(){
-        return de;
+    public int getMissing(){
+        return missing;
     }
 
     @Override
     public String toString() {
-        return "[ " + status + " ]" + " DD: " + dd + ", DE: " + de;
+        return "[ " + status + " ]" + " Missing Procedures: " + missing;
     }
 
 }
