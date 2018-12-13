@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Simple Java program to read CSV file in Java. In this program we will read
- * list of Schools stored in CSV file as comma separated values.
+ * list of Apps stored in CSV file as comma separated values.
  *
  * @author WINDOWS 8
  *
@@ -17,16 +17,16 @@ import java.util.List;
 public class CSVReaderInJava {
 
     public static void main(String... args) {
-        List<School> Schools = readSchoolsFromCSV("src/sat.csv");
+        List<App> Apps = readSchoolsFromCSV("src/driver.csv");
 
         // let's print all the person read from CSV file
-        for (School b : Schools) {
+        for (App b : Apps) {
             System.out.println(b);
         }
     }
 
-    private static List<School> readSchoolsFromCSV(String fileName) {
-        List<School> Schools = new ArrayList<>();
+    private static List<App> readSchoolsFromCSV(String fileName) {
+        List<App> Apps = new ArrayList<>();
         Path pathToFile = Paths.get(fileName);
 
         // create an instance of BufferedReader
@@ -36,6 +36,7 @@ public class CSVReaderInJava {
 
             // read the first line from the text file
             String line = br.readLine();
+            line = br.readLine();
 
             // loop until all lines are read
             while (line != null) {
@@ -45,10 +46,10 @@ public class CSVReaderInJava {
                 // the file, using a comma as the delimiter
                 String[] attributes = line.split(",");
 
-                School School = createSchool(attributes);
+                App App = createSchool(attributes);
 
-                // adding School into ArrayList
-                Schools.add(School);
+                // adding App into ArrayList
+                Apps.add(App);
 
                 // read next line before looping
                 // if end of file reached, line would be null
@@ -59,38 +60,50 @@ public class CSVReaderInJava {
             ioe.printStackTrace();
         }
 
-        return Schools;
+        return Apps;
     }
 
-    private static School createSchool(String[] metadata) {
-        String name = metadata[1];
-        int taken = Integer.parseInt(metadata[2]);
-        // create and return School of this metadata
-        return new School(name, taken);
+    private static App createSchool(String[] metadata) {
+        String status = metadata[3];
+        String dd = metadata[7];
+        String de = metadata[8];
+        // create and return App of this metadata
+        return new App(status, dd,de);
     }
 
 }
 
-class School {
-    private String name;
-    private int taken;
+class App {
+    private String status;
+    private boolean dd = false;
+    private boolean de = false;
 
-    public School(String name, int taken) {
-        this.name = name;
-        this.taken = taken;
+    public App(String status, String dd, String de) {
+        this.status = status;
+
+        if(dd.equals("complete")){
+            this.dd = true;
+        }
+        if(de.equals("complete")){
+            this.de = true;
+        }
     }
 
-    public String getName() {
-        return name;
+    public String getStatus(){
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public boolean getDD(){
+        return dd;
+    }
+
+    public boolean getDE(){
+        return de;
     }
 
     @Override
     public String toString() {
-        return name + "[ Tests Taken: " + taken + "]";
+        return "[ " + status + " ]" + " DD: " + dd + ", DE: " + de;
     }
 
 }
